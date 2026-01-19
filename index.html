@@ -1,0 +1,648 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EG Art">
+  <meta name="theme-color" content="#2a2a2a">
+  <meta name="description" content="Eric Greuter - Analog Photography & Oil Paintings">
+  <meta name="author" content="Eric Greuter">
+  <title></title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/images/Logo.ico?v=20251228" sizes="any" type="image/x-icon">
+  <link rel="stylesheet" href="css/style.css?v=20260117">
+</head>
+<body>
+  <header class="site-header">
+    <a href="#home" class="site-brand" id="site-brand" aria-label="Go to top">
+      <img class="site-logo" src="images/logo-1.png" alt="EG logo" id="site-logo">
+    </a>
+    
+    <div class="header-center">
+      <a href="#home" class="site-title" id="site-title"></a>
+      <nav class="site-nav" id="site-nav">
+        <a href="#pictures" id="nav-pictures"></a>
+        <a href="#paintings" id="nav-paintings"></a>
+        <a href="#contact" id="nav-contact"></a>
+      </nav>
+    </div>
+    
+    <div class="language-switcher">
+      <button class="lang-toggle-mobile" id="lang-toggle-mobile" aria-label="Choose language">
+        <span>⌄</span>
+      </button>
+      <div class="lang-flags-container">
+        <button class="lang-flag" data-lang="en" id="lang-flag-en" title="English">
+          <img src="images/flag-en.png" alt="EN" id="flag-en-img">
+        </button>
+        <button class="lang-flag" data-lang="nl" id="lang-flag-nl" title="Nederlands">
+          <img src="images/flag-nl.png" alt="NL" id="flag-nl-img">
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="home-svg-container" id="home-svg-container" aria-label="Featured work">
+      <figure class="image-layers" id="animation-ballet">
+        <video id="ballet-video" autoplay loop muted playsinline width="100%">
+          <source src="Animations/anim1_24fps_light.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <figcaption id="home-caption"></figcaption>
+    </section>
+
+    <section class="intro-section">
+      <div class="intro-content">
+        <p id="home-description" class="intro-text"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Gallery Drawers -->
+  <aside id="pictures-drawer" class="gallery-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2 id="pictures-title"></h2>
+      <button id="pictures-close" class="drawer-close" aria-label="Close gallery">✕</button>
+    </div>
+    <div class="gallery" id="gallery-pictures"></div>
+  </aside>
+
+  <aside id="paintings-drawer" class="gallery-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2 id="paintings-title"></h2>
+      <button id="paintings-close" class="drawer-close" aria-label="Close gallery">✕</button>
+    </div>
+    <div class="gallery" id="gallery-paintings"></div>
+  </aside>
+
+  <!-- Contact Drawer -->
+  <aside id="contact-drawer" class="contact-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2 id="contact-title"></h2>
+      <button id="contact-close" class="drawer-close" aria-label="Close contact">✕</button>
+    </div>
+    <div class="contact-profile">
+      <img src="images/myself.jpg" alt="Portrait of Eric Greuter" class="contact-avatar" id="contact-avatar">
+    </div>
+    <section class="contact-about contact-about-en" id="about-section-en" aria-label="About Me" lang="en">
+      <h3 id="about-title-en"></h3>
+      <p id="about-quote-en"></p>
+      <p id="about-paragraph1-en"></p>
+      <p id="about-paragraph2-en"></p>
+    </section>
+    <section class="contact-about contact-about-nl" id="about-section-nl" aria-label="Wie ben ik" lang="nl" style="display:none">
+      <h3 id="about-title-nl"></h3>
+      <p id="about-quote-nl"></p>
+      <p id="about-paragraph1-nl"></p>
+      <p id="about-paragraph2-nl"></p>
+    </section>
+    <p id="contact-text"></p>
+    <form id="contact-form" class="contact-form">
+      <input type="text" id="form-name" placeholder="" required>
+      <input type="email" id="form-email" placeholder="" required>
+      <textarea id="form-message" placeholder="" rows="5" required></textarea>
+      <button type="submit" id="form-submit"></button>
+    </form>
+  </aside>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <h3 id="footer-title"></h3>
+      <p id="footer-tagline"></p>
+      <p class="copyright" id="footer-copyright"></p>
+    </div>
+  </footer>
+
+  <script>
+    console.log('Page script loaded');
+    let currentLang = localStorage.getItem('language') || 'en';
+    let captions = {};
+    let selectedAnimationType = 'anim1'; // Store animation type globally
+
+    async function loadCaptions() {
+      try {
+        const response = await fetch('captions.json');
+        const allCaptions = await response.json();
+        captions = allCaptions[currentLang] || allCaptions['en'];
+        console.log('Captions loaded:', captions);
+        updatePageText();
+        // Ensure home caption is updated after captions load
+        updateHomeCaption();
+      } catch (error) {
+        console.error('Failed to load captions:', error);
+      }
+    }
+
+    function updateHomeCaption() {
+      const captionEl = document.getElementById('home-caption');
+      if (captionEl && captions.home) {
+        const homeTitleAnim1 = captions.home.titleAnim1 || captions.home.title;
+        const homeTitleAnim2 = captions.home.titleAnim2 || captions.home.title;
+        const resolvedTitle = selectedAnimationType === 'anim2'
+          ? (homeTitleAnim2 || 'Animation')
+          : (homeTitleAnim1 || 'Animation');
+        captionEl.textContent = resolvedTitle;
+        console.log('Caption updated to:', resolvedTitle);
+      }
+    }
+
+    function updatePageText() {
+      const ui = captions.ui || {};
+      const nav = captions.nav || {};
+      const contact = captions.contact || {};
+      const form = captions.form || {};
+      const about = captions.about || {};
+
+      // Add fade-out effect
+      const navLinks = document.querySelectorAll('.site-nav a');
+      navLinks.forEach(link => link.classList.add('fade-out'));
+
+      // Wait for fade-out, then update text and fade back in
+      setTimeout(() => {
+      // Update document title
+      document.title = captions.header?.title || 'EG — Analog Photography & Paintings';
+
+      // Update header and navigation
+      document.getElementById('site-title').textContent = captions.header?.title || 'EG — Analog Photography & Paintings';
+      document.getElementById('site-brand').setAttribute('aria-label', ui.goToTop || 'Go to top');
+      document.getElementById('site-logo').alt = ui.logoAlt || 'EG logo';
+      document.getElementById('lang-flag-en').title = ui.languageEnglish || 'English';
+      document.getElementById('lang-flag-nl').title = ui.languageNederlands || 'Nederlands';
+      document.getElementById('flag-en-img').alt = ui.flagEN || 'EN';
+      document.getElementById('flag-nl-img').alt = ui.flagNL || 'NL';
+      document.getElementById('nav-pictures').textContent = nav.pictures || 'Photos';
+      document.getElementById('nav-paintings').textContent = nav.paintings || 'Paintings';
+      document.getElementById('nav-contact').textContent = nav.contact || 'Contact';
+
+      // Remove fade-out effect
+      navLinks.forEach(link => link.classList.remove('fade-out'));
+
+      // Update home section
+      document.getElementById('home-description').textContent = captions.home?.description || '';
+      const homeTitleAnim1 = captions.home?.titleAnim1 || captions.home?.title;
+      const homeTitleAnim2 = captions.home?.titleAnim2 || captions.home?.title;
+      const homeTitleAnim3 = captions.home?.titleAnim3 || captions.home?.title;
+      const resolvedHomeTitle = selectedAnimationType === 'anim3'
+        ? (homeTitleAnim3 || 'Animation')
+        : (selectedAnimationType === 'anim2'
+          ? (homeTitleAnim2 || 'Animation')
+          : (homeTitleAnim1 || 'Animation'));
+      console.log('Selected animation type:', selectedAnimationType);
+      console.log('Resolved title:', resolvedHomeTitle);
+      const captionEl = document.getElementById('home-caption');
+      console.log('Caption element:', captionEl);
+      if (captionEl) {
+        captionEl.textContent = resolvedHomeTitle;
+      }
+      document.getElementById('home-svg-container').setAttribute('aria-label', ui.featuredWork || 'Featured work');
+
+      // Update gallery titles
+      document.getElementById('pictures-title').textContent = captions.pictures?.title || '';
+      document.getElementById('paintings-title').textContent = captions.paintings?.title || '';
+
+      // Update contact drawer
+      document.getElementById('contact-title').textContent = contact.title || '';
+      document.getElementById('contact-text').textContent = contact.paragraph2?.[0] || '';
+      document.getElementById('contact-close').setAttribute('aria-label', ui.closeContact || 'Close contact');
+      document.getElementById('contact-avatar').alt = ui.portraitAlt || 'Portrait of Eric Greuter';
+
+      // Update About section aria-labels
+      document.getElementById('about-section-en').setAttribute('aria-label', about.title || 'About Me');
+      document.getElementById('about-section-nl').setAttribute('aria-label', about.title || 'Wie ben ik');
+
+      // Populate About Me content
+      const langSuffix = currentLang === 'nl' ? '-nl' : '-en';
+      document.getElementById(`about-title${langSuffix}`).textContent = about.title || '';
+      document.getElementById(`about-quote${langSuffix}`).textContent = about.quote || '';
+      document.getElementById(`about-paragraph1${langSuffix}`).textContent = Array.isArray(about.paragraph1) ? about.paragraph1.join(' ') : (about.paragraph1 || '');
+      document.getElementById(`about-paragraph2${langSuffix}`).textContent = Array.isArray(about.paragraph2) ? about.paragraph2.join(' ') : (about.paragraph2 || '');
+
+      // Update footer
+      document.getElementById('footer-title').textContent = captions.footer?.title || ui.footerTitle || '';
+      document.getElementById('footer-tagline').textContent = captions.tagline || '';
+      document.getElementById('footer-copyright').textContent = ui.copyright || '';
+
+      // Update contact form placeholders and button
+      const formName = document.getElementById('form-name');
+      const formEmail = document.getElementById('form-email');
+      const formMessage = document.getElementById('form-message');
+      const formSubmit = document.getElementById('form-submit');
+      if (formName) formName.placeholder = form.name || '';
+      if (formEmail) formEmail.placeholder = form.email || '';
+      if (formMessage) formMessage.placeholder = form.message || '';
+      if (formSubmit) formSubmit.textContent = form.submit || '';
+
+      // Toggle About Me language block in contact drawer
+      const aboutEn = document.querySelector('.contact-about-en');
+      const aboutNl = document.querySelector('.contact-about-nl');
+      if (aboutEn && aboutNl) {
+        if (currentLang === 'nl') {
+          aboutEn.style.display = 'none';
+          aboutNl.style.display = 'block';
+        } else {
+          aboutEn.style.display = 'block';
+          aboutNl.style.display = 'none';
+        }
+      }
+
+      loadGalleries();
+      }, 150); // Half of the transition duration
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('language', lang);
+
+      document.querySelectorAll('.lang-flag').forEach(btn => {
+        if (btn.dataset.lang === lang) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      loadCaptions();
+    }
+
+    async function loadGalleries() {
+      try {
+        console.log('Loading galleries...');
+        const picturesRes = await fetch('images/pictures/pictures.json');
+        const pictureFiles = await picturesRes.json();
+
+        const paintingsRes = await fetch('images/paintings/paintings.json');
+        const paintingFiles = await paintingsRes.json();
+
+        console.log('Gallery files loaded:', pictureFiles.length, 'pictures,', paintingFiles.length, 'paintings');
+        renderGalleries(pictureFiles, paintingFiles);
+      } catch (error) {
+        console.error('Failed to load galleries:', error);
+      }
+    }
+
+    function renderGalleries(pictureFiles, paintingFiles) {
+      console.log('Rendering galleries...');
+      const picturesContainer = document.getElementById('gallery-pictures');
+      const paintingsContainer = document.getElementById('gallery-paintings');
+
+      console.log('Containers:', picturesContainer, paintingsContainer);
+
+      picturesContainer.innerHTML = '';
+      paintingsContainer.innerHTML = '';
+
+      pictureFiles.forEach((file, index) => {
+        const num = file.replace('Picture ', '').replace(/\.(jpg|JPG)$/, '');
+        const data = captions.pictures?.[`Picture ${num}`] || {};
+        const item = createGalleryItem(data, `images/pictures/${file}`, index);
+        picturesContainer.appendChild(item);
+      });
+
+      paintingFiles.forEach((file, index) => {
+        const num = file.replace('Painting ', '').replace('.jpg', '');
+        const data = captions.paintings?.[`Painting ${num}`] || {};
+        const item = createGalleryItem(data, `images/paintings/${file}`, pictureFiles.length + index);
+        paintingsContainer.appendChild(item);
+      });
+    }
+
+    function getDominantColor(img) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      canvas.width = 50;
+      canvas.height = 50;
+      
+      ctx.drawImage(img, 0, 0, 50, 50);
+      const imageData = ctx.getImageData(0, 0, 50, 50).data;
+      
+      let r = 0, g = 0, b = 0, count = 0;
+      for (let i = 0; i < imageData.length; i += 4) {
+        r += imageData[i];
+        g += imageData[i + 1];
+        b += imageData[i + 2];
+        count++;
+      }
+      
+      r = Math.round(r / count);
+      g = Math.round(g / count);
+      b = Math.round(b / count);
+      
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function createGalleryItem(data, src, globalIndex) {
+      const figure = document.createElement('figure');
+      const img = document.createElement('img');
+      img.className = 'thumb';
+      img.src = src;
+      img.alt = data.title || '';
+      img.title = data.title || '';
+      
+      // Set dynamic border color when image loads
+      img.addEventListener('load', () => {
+        try {
+          const dominantColor = getDominantColor(img);
+          figure.style.borderColor = dominantColor;
+        } catch (e) {
+          console.warn('Could not extract color:', e);
+        }
+      });
+      
+      const descriptionHtml = (data.description || []).join('<br>');
+      if (descriptionHtml) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.innerHTML = descriptionHtml;
+        figure.appendChild(tooltip);
+      }
+
+      const caption = document.createElement('figcaption');
+      caption.textContent = data.title || '';
+
+      // Create rating stars container
+      const ratingContainer = document.createElement('div');
+      ratingContainer.className = 'rating-stars';
+      ratingContainer.dataset.imageSrc = src;
+      
+      for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.dataset.value = i;
+        star.textContent = '★';
+        
+        star.addEventListener('click', async () => {
+          // Update visual state
+          ratingContainer.querySelectorAll('.star').forEach(s => {
+            s.classList.toggle('active', s.dataset.value <= i);
+          });
+          
+          // Send rating to Formspree
+          try {
+            const formData = new FormData();
+            formData.append('image', src);
+            formData.append('title', data.title || 'Untitled');
+            formData.append('rating', i);
+            formData.append('timestamp', new Date().toISOString());
+            
+            const response = await fetch('https://formspree.io/f/xjggrvek', {
+              method: 'POST',
+              body: formData,
+              headers: { 'Accept': 'application/json' }
+            });
+            
+            if (response.ok) {
+              console.log(`Rating ${i} stars saved for ${src}`);
+            }
+          } catch (error) {
+            console.error('Failed to save rating:', error);
+          }
+        });
+        
+        ratingContainer.appendChild(star);
+      }
+
+      figure.appendChild(img);
+      figure.appendChild(caption);
+      figure.appendChild(ratingContainer);
+      return figure;
+    }
+
+    // ============================================
+    // INITIALIZATION: Setup animation FIRST before anything else
+    // ============================================
+    const balletVideo = document.getElementById('ballet-video');
+    const homeFigure = document.getElementById('animation-ballet');
+    if (balletVideo && homeFigure) {
+      const animations = ['Animations/anim1_24fps_light.mp4', 'Animations/puddle_outflow_reflect.gif', 'Animations/vuurtoren-fade-020220.gif'];
+      const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+      const isGif = randomAnim.endsWith('.gif');
+      const isAnim2 = randomAnim.includes('puddle_outflow_reflect');
+      const isAnim3 = randomAnim.includes('vuurtoren-fade-020220');
+      let animElement;
+      
+      // Set global animation type BEFORE loading captions
+      selectedAnimationType = isAnim3 ? 'anim3' : (isAnim2 ? 'anim2' : 'anim1');
+      homeFigure.dataset.selectedAnimation = selectedAnimationType;
+      console.log('Animation type set to:', selectedAnimationType);
+      
+      if (isGif) {
+        // Replace video with img for GIF
+        const img = document.createElement('img');
+        img.id = 'ballet-video';
+        img.src = randomAnim;
+        img.alt = 'Animation';
+        img.style.width = '100%';
+        balletVideo.replaceWith(img);
+        animElement = img;
+        
+        // Set up fade-out loop for GIF (estimate 10 second duration)
+        const gifDuration = 10000; // 10 seconds
+        setInterval(() => {
+          animElement.classList.add('fade-out-anim');
+          setTimeout(() => {
+            animElement.classList.remove('fade-out-anim');
+            animElement.classList.add('fade-in-anim');
+            // Force reload by adding timestamp
+            const currentSrc = animElement.src.split('?')[0];
+            animElement.src = currentSrc + '?t=' + Date.now();
+            setTimeout(() => {
+              animElement.classList.remove('fade-in-anim');
+            }, 1000);
+          }, 3000); // Wait for 3 second fade-out
+        }, gifDuration);
+      } else {
+        // Use video element for MP4
+        balletVideo.querySelector('source').src = randomAnim;
+        balletVideo.load();
+        balletVideo.playbackRate = 0.3;
+        animElement = balletVideo;
+        
+        // Set up fade-out loop for video
+        balletVideo.addEventListener('ended', () => {
+          animElement.classList.add('fade-out-anim');
+          setTimeout(() => {
+            animElement.classList.remove('fade-out-anim');
+            animElement.classList.add('fade-in-anim');
+            balletVideo.currentTime = 0;
+            balletVideo.play();
+            setTimeout(() => {
+              animElement.classList.remove('fade-in-anim');
+            }, 1000);
+          }, 3000); // Wait for 3 second fade-out
+        });
+      }
+    }
+
+    function setupEventListeners() {
+      // Setup language switching
+      document.querySelectorAll('.lang-flag').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setLanguage(btn.dataset.lang);
+          // Close mobile dropdown after selection
+          const langSwitcher = document.querySelector('.language-switcher');
+          if (langSwitcher && langSwitcher.classList.contains('open')) {
+            langSwitcher.classList.remove('open');
+          }
+        });
+      });
+
+      // Setup mobile language toggle
+      const langToggleMobile = document.getElementById('lang-toggle-mobile');
+      if (langToggleMobile) {
+        langToggleMobile.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const langSwitcher = document.querySelector('.language-switcher');
+          langSwitcher.classList.toggle('open');
+        });
+        
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+          const langSwitcher = document.querySelector('.language-switcher');
+          if (langSwitcher && !langSwitcher.contains(e.target)) {
+            langSwitcher.classList.remove('open');
+          }
+        });
+      }
+
+      const nav = document.getElementById('site-nav');
+      const contactLink = nav.querySelector('a[href="#contact"]');
+      const contactDrawer = document.getElementById('contact-drawer');
+      const contactClose = document.getElementById('contact-close');
+
+      function openContactDrawer() {
+        contactDrawer.classList.add('show');
+        contactDrawer.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeContactDrawer() {
+        contactDrawer.classList.remove('show');
+        contactDrawer.setAttribute('aria-hidden', 'true');
+      }
+
+      function toggleContactDrawer() {
+        if (contactDrawer.classList.contains('show')) {
+          closeContactDrawer();
+        } else {
+          openContactDrawer();
+        }
+      }
+
+      if (contactLink) {
+        contactLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleContactDrawer();
+        });
+      }
+
+      if (contactClose) {
+        contactClose.addEventListener('click', closeContactDrawer);
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeContactDrawer();
+        }
+      });
+
+      document.getElementById('contact-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('Form submitted');
+      });
+
+      // Gallery drawer management
+      const picturesDrawer = document.getElementById('pictures-drawer');
+      const paintingsDrawer = document.getElementById('paintings-drawer');
+      
+      function closeAllDrawers() {
+        if (picturesDrawer) {
+          picturesDrawer.classList.remove('show');
+          picturesDrawer.setAttribute('aria-hidden', 'true');
+        }
+        if (paintingsDrawer) {
+          paintingsDrawer.classList.remove('show');
+          paintingsDrawer.setAttribute('aria-hidden', 'true');
+        }
+        if (contactDrawer) {
+          contactDrawer.classList.remove('show');
+          contactDrawer.setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      function toggleGalleryDrawer(drawerId) {
+        const drawer = document.getElementById(drawerId);
+        if (drawer) {
+          drawer.classList.toggle('show');
+          drawer.setAttribute('aria-hidden', drawer.classList.contains('show') ? 'false' : 'true');
+        }
+      }
+
+      // Close buttons for gallery drawers
+      const picturesCloseBtn = document.getElementById('pictures-close');
+      const paintingsCloseBtn = document.getElementById('paintings-close');
+      
+      if (picturesCloseBtn) {
+        picturesCloseBtn.addEventListener('click', () => {
+          if (picturesDrawer) {
+            picturesDrawer.classList.remove('show');
+            picturesDrawer.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
+
+      if (paintingsCloseBtn) {
+        paintingsCloseBtn.addEventListener('click', () => {
+          if (paintingsDrawer) {
+            paintingsDrawer.classList.remove('show');
+            paintingsDrawer.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
+
+      // Nav link handlers for gallery drawers
+      const navPicturesLink = document.getElementById('nav-pictures');
+      const navPaintingsLink = document.getElementById('nav-paintings');
+      
+      console.log('Nav links found:', navPicturesLink, navPaintingsLink);
+      
+      if (navPicturesLink) {
+        navPicturesLink.addEventListener('click', (e) => {
+          console.log('Pictures link clicked');
+          e.preventDefault();
+          toggleGalleryDrawer('pictures-drawer');
+        });
+      }
+
+      if (navPaintingsLink) {
+        navPaintingsLink.addEventListener('click', (e) => {
+          console.log('Paintings link clicked');
+          e.preventDefault();
+          toggleGalleryDrawer('paintings-drawer');
+        });
+      }
+
+      // Close drawer when clicking outside
+      document.addEventListener('click', (e) => {
+        if (picturesDrawer && picturesDrawer.classList.contains('show') && !picturesDrawer.contains(e.target) && !navPicturesLink?.contains(e.target)) {
+          picturesDrawer.classList.remove('show');
+          picturesDrawer.setAttribute('aria-hidden', 'true');
+        }
+        if (paintingsDrawer && paintingsDrawer.classList.contains('show') && !paintingsDrawer.contains(e.target) && !navPaintingsLink?.contains(e.target)) {
+          paintingsDrawer.classList.remove('show');
+          paintingsDrawer.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+
+    // Now load galleries and captions (animation type is already set)
+    (async () => {
+      await loadCaptions();
+      loadGalleries();
+      console.log('Initialization complete, setting up event listeners');
+      setupEventListeners();
+      document.body.classList.add('captions-ready');
+    })();
+  </script>
+</body>
+</html>
