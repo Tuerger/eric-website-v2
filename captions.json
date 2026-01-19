@@ -49,7 +49,14 @@
       "paragraph1": "",
       "paragraph2": ["Use the contact form below to reach out to me:"]
     },
-    "form": {"name": "Name", "email": "Email", "message": "Message", "submit": "Send"},
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send",
+      "success": "Thank you! Your message has been sent successfully.",
+      "error": "Oops! Something went wrong. Please try again."
+    },
     "paintings": {
       "title": "Oil Paintings",
       "Painting 1": {"title": "Lago Maggiore", "description": ["Oil on canvas - ", "An ode to the \"Blauwe Reiter\" painting group from the early 20th century."]},
@@ -140,7 +147,14 @@
       "paragraph1": "",
       "paragraph2": ["Gebruik het onderstaande contactformulier om een bericht voor mij achter te laten:"]
     },
-    "form": {"name": "Naam", "email": "E-mail", "message": "Bericht", "submit": "Verzenden"},
+    "form": {
+      "name": "Naam",
+      "email": "E-mail",
+      "message": "Bericht",
+      "submit": "Verzenden",
+      "success": "Bedankt! Je bericht is succesvol verzonden.",
+      "error": "Oeps! Er is iets misgegaan. Probeer het opnieuw."
+    },
     "paintings": {
       "title": "Schilderijen",
       "Painting 1": {"title": "Lago Maggiore", "description": ["Olieverf op doek - ", "Een ode aan de \"Blauwe Reiter\" schildergroep uit het begin van de 20e eeuw."]},
