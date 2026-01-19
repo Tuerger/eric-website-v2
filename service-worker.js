@@ -1,16 +1,13 @@
-const CACHE_NAME = 'eg-portfolio-v3';
+const CACHE_NAME = 'eg-portfolio-v4';
 const OFFLINE_URLS = [
   '/',
   '/index.html',
-  '/about.html',
-  '/paintings.html',
-  '/pictures.html',
-  '/thanks.html',
   '/css/style.css',
-  '/js/main.js',
-  '/components/header.html',
   '/captions.json',
-  '/images/lead.jpg',
+  '/images/Logo-1.png',
+  '/images/logo-1.png',
+  '/images/flag-en.png',
+  '/images/flag-nl.png',
   '/manifest.webmanifest'
 ];
 
