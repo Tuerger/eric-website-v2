@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://ericgreuter.netlify.app/sitemap.xml
+
+# Disallow unnecessary files
+Disallow: /service-worker.js
+Disallow: /manifest.webmanifest
