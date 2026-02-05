@@ -113,6 +113,7 @@ body:not(.captions-ready) .site-header {
   animation: slideDown 0.2s ease;
   position: relative;
   z-index: 1001;
+  align-items: center;
 }
 
   .lang-toggle-mobile {
@@ -208,6 +209,23 @@ body:not(.captions-ready) .site-header {
   }
 
 /* --- Hamburger Menu Button --- */
+ .nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(218, 197, 197, 0.4);
+  color: #dac5c5;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+ }
+
+ .nav-toggle:focus {
+  outline: none;
+ }
+
 /* --- Navigation Dropdown --- */
 .site-nav {
   position: static;
@@ -787,7 +805,10 @@ figcaption {
   width: 420px;
   max-width: 90vw;
   max-height: calc(100vh - 100px);
+  max-height: calc(100dvh - 100px);
+  max-height: calc(100svh - 100px);
   padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   background: var(--bg);
   border-left: 1px solid rgba(218, 197, 197, 0.2);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
@@ -796,6 +817,8 @@ figcaption {
   transition: transform 0.6s ease, opacity 0.6s ease;
   z-index: 1000;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-bottom: 80px;
   pointer-events: auto;
 }
 
@@ -986,10 +1009,12 @@ figcaption {
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
+    width: 100%;
+    position: relative;
   }
 
   .site-title {
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 700;
     text-align: center;
     white-space: normal;
@@ -997,16 +1022,44 @@ figcaption {
     line-height: 1.2;
   }
 
+  .nav-toggle {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 1.1rem;
+  }
+
   .site-nav {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    gap: 0.4rem;
     justify-content: center;
+    width: min(320px, 90vw);
+    padding: 0.6rem;
+    border: 1px solid rgba(218, 197, 197, 0.35);
+    border-radius: 8px;
+    background: var(--bg);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    z-index: 1002;
+  }
+
+  .site-nav.show {
+    display: flex;
   }
 
   .site-nav a {
-    font-size: 0.85rem;
-    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    width: 100%;
+    border: 1px solid rgba(218, 197, 197, 0.25);
+    border-radius: 6px;
+    background: rgba(218, 197, 197, 0.08);
   }
 
   /* Right: expandable language selector on mobile */
@@ -1022,7 +1075,9 @@ figcaption {
     background: transparent;
     border: 1px solid rgba(218, 197, 197, 0.4);
     border-radius: 4px;
-    padding: 0.4rem 0.6rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     color: #dac5c5;
     font-size: 1.2rem;
     cursor: pointer;
@@ -1160,11 +1215,16 @@ figcaption {
   .contact-form button {
     padding: 12px;
     font-size: 1rem;
+    margin-bottom: 20px;
   }
 
   .contact-drawer {
     width: 100%;
     max-width: 100%;
+    top: 70px;
+    bottom: 0;
+    max-height: none;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   }
 
   /* --- Modal adjustments --- */

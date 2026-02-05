@@ -65,6 +65,7 @@
     </div>
     
     <div class="language-switcher">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">☰</button>
       <button class="lang-toggle-mobile" id="lang-toggle-mobile" aria-label="Choose language">
         <span>⌄</span>
       </button>
@@ -542,9 +543,25 @@
       }
 
       const nav = document.getElementById('site-nav');
+      const navToggle = document.getElementById('nav-toggle');
       const contactLink = nav.querySelector('a[href="#contact"]');
       const contactDrawer = document.getElementById('contact-drawer');
       const contactClose = document.getElementById('contact-close');
+
+      if (navToggle) {
+        navToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = nav.classList.toggle('show');
+          navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (nav.classList.contains('show') && !nav.contains(e.target) && !navToggle.contains(e.target)) {
+            nav.classList.remove('show');
+            navToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
 
       function openContactDrawer() {
         contactDrawer.classList.add('show');
@@ -560,6 +577,7 @@
         if (contactDrawer.classList.contains('show')) {
           closeContactDrawer();
         } else {
+          closeAllDrawers();
           openContactDrawer();
         }
       }
@@ -567,6 +585,10 @@
       if (contactLink) {
         contactLink.addEventListener('click', (e) => {
           e.preventDefault();
+          if (navToggle && nav.classList.contains('show')) {
+            nav.classList.remove('show');
+            navToggle.setAttribute('aria-expanded', 'false');
+          }
           toggleContactDrawer();
         });
       }
@@ -653,8 +675,12 @@
       function toggleGalleryDrawer(drawerId) {
         const drawer = document.getElementById(drawerId);
         if (drawer) {
-          drawer.classList.toggle('show');
-          drawer.setAttribute('aria-hidden', drawer.classList.contains('show') ? 'false' : 'true');
+          const shouldOpen = !drawer.classList.contains('show');
+          closeAllDrawers();
+          if (shouldOpen) {
+            drawer.classList.add('show');
+            drawer.setAttribute('aria-hidden', 'false');
+          }
         }
       }
 
@@ -690,6 +716,10 @@
         navPicturesLink.addEventListener('click', (e) => {
           console.log('Pictures link clicked');
           e.preventDefault();
+          if (navToggle && nav.classList.contains('show')) {
+            nav.classList.remove('show');
+            navToggle.setAttribute('aria-expanded', 'false');
+          }
           toggleGalleryDrawer('pictures-drawer');
         });
       }
@@ -698,6 +728,10 @@
         navPaintingsLink.addEventListener('click', (e) => {
           console.log('Paintings link clicked');
           e.preventDefault();
+          if (navToggle && nav.classList.contains('show')) {
+            nav.classList.remove('show');
+            navToggle.setAttribute('aria-expanded', 'false');
+          }
           toggleGalleryDrawer('paintings-drawer');
         });
       }
