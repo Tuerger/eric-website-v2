@@ -25,6 +25,11 @@ A responsive, bilingual art portfolio website showcasing analog photography and 
 - All text sourced from `captions.json`
 - No hardcoded text in HTML
 
+### Mobile Navigation
+- Hamburger menu for primary navigation on mobile
+- Language selector and hamburger aligned in header
+- Menu closes on outside click or after navigation
+
 ## 📁 File Structure
 
 ```
@@ -147,6 +152,14 @@ To add more animations:
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - ES6+ JavaScript features used
 - CSS Grid and Flexbox layout
+
+### Mobile Drawer Sizing
+- Contact and gallery drawers use dynamic viewport units (svh/dvh)
+- Extra safe-area padding for iOS/Android browser UI
+- Improved scroll behavior for mobile browsers
+
+### PWA Orientation
+- Orientation set to `any` (supports both portrait and landscape)
 
 ### Performance Optimizations
 - Service worker for offline support
