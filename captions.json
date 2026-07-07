@@ -59,6 +59,7 @@
     },
     "paintings": {
       "title": "Oil Paintings",
+      "Painting 0": {"title": "New start with pears", "description": ["Oil on canvas", "Pears, pottery, and quiet light—proof that simplicity never goes out of style.", "\"AA tribute to the pear orchard that once stood here, before our new home was built.\""]},
       "Painting 1": {"title": "Lago Maggiore", "description": ["Oil on canvas", "An ode to the \"Blauwe Reiter\" painting group from the early 20th century."]},
       "Painting 2": {"title": "Mudflat walkers", "description": ["Oil on panel", "The rhythm of ebb and flow of the Wadden Sea"]},
       "Painting 3": {"title": "Sahara storm", "description": ["Oil on canvas ", "The colors of a Sahara sandstorm."]},
@@ -157,6 +158,7 @@
     },
     "paintings": {
       "title": "Schilderijen",
+      "Painting 0": {"title": "Nieuwe start met peren", "description": ["Olieverf op doek", "Peren, aardewerk en stil licht - bewijs dat eenvoud nooit uit de mode raakt.", "\"Ter herinnering aan de perenboomgaard die hier ooit stond, voordat ons nieuwe huis werd gebouwd.\""]},
       "Painting 1": {"title": "Lago Maggiore", "description": ["Olieverf op doek", "Een ode aan de \"Blauwe Reiter\" schildergroep uit het begin van de 20e eeuw."]},
       "Painting 2": {"title": "Wadlopers", "description": ["Olieverf op paneel", "Het ritme van eb en vloed op de Waddenzee"]},
       "Painting 3": {"title": "Sahara storm", "description": ["Olieverf op doek", "De kleuren van een Sahara zandstorm."]},
