@@ -59,7 +59,7 @@
     },
     "paintings": {
       "title": "Oil Paintings",
-      "Painting 0": {"title": "New start with pears", "description": ["Oil on canvas", "Pears, pottery, and quiet light—proof that simplicity never goes out of style.", "\"A tribute to the pear orchard that once stood here, before our new home was built.\""]},
+      "Painting 0": {"title": "New start with pears", "description": ["Oil on canvas", "Pears, pottery, and quiet light, proof that simplicity never goes out of style.", "\"A tribute to the pear orchard that once stood here, before our new home was built.\""]},
       "Painting 1": {"title": "Lago Maggiore", "description": ["Oil on canvas", "An ode to the \"Blauwe Reiter\" painting group from the early 20th century."]},
       "Painting 2": {"title": "Mudflat walkers", "description": ["Oil on panel", "The rhythm of ebb and flow of the Wadden Sea"]},
       "Painting 3": {"title": "Sahara storm", "description": ["Oil on canvas ", "The colors of a Sahara sandstorm."]},
